@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'libs/bootstrap/css/bootstrap.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'libs/bootstrap/offcanvas.css' %}">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="{% static 'libs/fontawesome/css/all.min.css' %}">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{% static 'favicon/favicon.ico' %}" type="image/x-icon">
+    
+    <!-- Fuente-->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,700;1,400&display=swap" rel="stylesheet"> 
+
+    <!-- Mis estilos -->
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+
+    <!-- Extender css -->
+    {% block css %} 
+    {% endblock %}
+
+    <!-- A todas las vistas hay que pasarle un titulo -->
+    <title>{% if titulo %} {{titulo}} {% else %} Clìnica {% endif %}</title>
+  </head>
+  <body class="bg-light">
+    
+    {% include 'componentes/nav.html' %} 
+    {% include 'componentes/subnav.html' %}
+    
+    <div class="d-flex align-items-center justify-content-center p-3 mb-3 text-white bg-primary bg-gradient">
+      <img class="mr-3" src="{% static 'img/optometrista.svg' %}" alt="doctor" width="70" height="70">
+      <div class="lh-1">
+        <h1 class="h3 mb-0 text-white lh-1 py-1 border-top border-verde border-2">Sistema de Gestión Clínica</h1>
+        <small class="lead text-success">{{ request.user.get_full_name }}</small>
+      </div>
+    </div>
+    
+    <main class="container">
+      {% include 'componentes/mensajes.html' %}
+      {% block content %} 
+      {% endblock %}
+    </main>
+  
+    {% include 'componentes/footer.html' %} 
+    
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'date-time-phone/jquery-ui-timepicker-addon.css' %}">
+    <link rel="stylesheet" href="{% static 'date-time-phone/jquery-ui.css' %}"/>
+
+
+    <!-- Bootstrap JS -->
+    <script src="{% static 'libs/bootstrap/bootstrap.bundle.min.js' %}"></script>
+    <!--Otros-->
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+     -->
+    <script src="{% static 'libs/bootstrap/offcanvas.js' %}"></script>
+    
+    <!-- Fontawesome JS -->
+    <script src="{% static 'libs/fontawesome/js/all.min.js' %}"></script>
+    <!--Fecha JS-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/i18n/jquery-ui-timepicker-addon-i18n.min.js" integrity="sha512-t2ZIJH81Sh+SWSb4BuA9en4j6fwja+sYOEXbqoepD9lJ+efUGD94gSWqdmgQchGmPez2ojECq4Fm6bKMUAzIiQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" integrity="sha512-LT9fy1J8pE4Cy6ijbg96UkExgOjCqcxAC7xsnv+mLJxSvftGVmmc236jlPTZXPcBRQcVOWoK1IJhb1dAjtb4lQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js" integrity="sha512-s5u/JBtkPg+Ff2WEr49/cJsod95UgLHbC00N/GglqdQuLnYhALncz8ZHiW/LxDRGduijLKzeYb7Aal9h3codZA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- <script src="/path/to/jquery-input-mask-phone-number.min.js"></script> -->
+    <script src="https://unpkg.com/jquery-input-mask-phone-number@1.0.14/dist/jquery-input-mask-phone-number.js"></script>
+
+    <script src="{% static 'date-time-phone/jquery-input-mask-phone-number.min.js' %}"></script>
+    <script src="{% static 'date-time-phone/jquery-ui.js' %}"></script>
+    <script src="{% static 'date-time-phone/jquery-ui-timepicker-addon.js' %}"></script>
+   
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+    <!-- Fengyuan Chen's Datepicker -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.css" integrity="sha256-b88RdwbRJEzRx95nCuuva+hO5ExvXXnpX+78h8DjyOE=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.js" integrity="sha256-/7FLTdzP6CfC1VBAj/rsp3Rinuuu9leMRGd354hvk0k=" crossorigin="anonymous"></script>
+  
+    <script>
+      $(function () {
+        $("#datepicker").datepicker();
+      });
+    </script>
+    <!--Script Time-->
+    <script>
+      $('#selector').timepicker().
+    </script>
+    <!--Scrinpt Telefono-->
+    <script>
+      $(document).ready(function () {
+         $('#phone').usPhoneFormat({
+           format: '(xxx) xxx-xxxx',
+        });   
+    });
+    </script>
+  
+    <!-- Extender js -->
+    {% block js %} 
+    {% endblock %}
+  </body>
+</html>

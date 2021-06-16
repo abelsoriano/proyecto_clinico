@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load usuarios_tags %} 
+
+{% block aplicacion %}
+    <div class="container">
+        {% if not reporte %}
+            <div class="row">
+                <div class="col-sm-6">
+                    <h1 class="text-center border-bottom border-primary border-3 mt-3">
+                        <a href="{% url 'pacientes:lista' %}" style="text-decoration: none;">
+                            <i class="fas fa-angle-double-left text-primary"></i>
+                        </a>
+                        {{titulo}}
+                    </h1>
+                </div>
+                <div class="col-sm-6 my-4">
+                    <form class="d-flex align-items-end">
+                        <div class="col-6">
+                            {{form}}
+                        </div>
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-dark text-white mx-2">
+                                Filtrar
+                            </button>
+                            <a href="{% url 'reportes:descargar' %}" class="btn btn-warning rounded">
+                                <i class="fas fa-file-download text-dark"></i> 
+                                <span class="text-dark">Descargar</span>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+        <div class="row">
+            {% if reporte %}
+                <h3 class="text-center my-3 bg-warning">{{reporte}}</h3>
+            {% endif %}
+            <table class="table table-bordered">
+                <thead class="bg-verde bg-gradient">
+                    <tr class="">
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Edad</th>
+                        <th>DNI</th>
+                        <th>Email</th>
+                        <th>Medico</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for paciente in pacientes %}
+                        <tr>
+                            <td>{{paciente.nombre}}</td>
+                            <td>{{paciente.apellido}}</td>
+                            <td>{{paciente.edad}}</td>
+                            <td>{{paciente.dni}}</td>
+                            {% if paciente.email %}
+                                <td>{{paciente.email}}</td>
+                            {% else %}
+                                <td>No dio email</td>
+                            {% endif %}
+                            {% if paciente.medico %}
+                                <td>{{paciente.medico}}</td>
+                            {% else %}
+                                <td>Sin asignar</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

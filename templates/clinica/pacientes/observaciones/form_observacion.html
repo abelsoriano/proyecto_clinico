@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+{% load usuarios_tags %} 
+{% load widget_tweaks %}
+
+{% block content %}
+    {% if user|sector:"Medico" or user|sector:"Gerencia" %}
+        <div class="row">
+            <form method="post">
+                {% csrf_token %}
+                <div class="container pt-3">
+                    <h1 class="display-5 text-center my-3">{{titulo}}</h1>
+
+                    {% include 'componentes/forms_errors.html' %}
+
+                    <!-- Observacion -->
+                    <div class="row d-flex justify-content-center">
+                        <!-- Motivo -->
+                        <div class="col-6">
+                            <div class="my-3">
+                                <label class="form-label">
+                                    {{form.motivo_consulta.label|upper}}
+                                </label>
+                                {{form.motivo_consulta|attr:'autocomplete:off'|attr:'autofocus:on'|add_class:'form-control text-center rounded'}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Descripcion -->
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-9">
+                            <div class="my-3">
+                                <label class="form-label">{{form.descripcion.label|upper}}</label>
+                                {{form.descripcion|add_class:'form-control rounded'}}
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    <div class="d-flex justify-content-center">
+                        <div class="btn-group shadow-sm" role="group" aria-label="Basic outlined example">
+                            <a href="{{url_volver}}" type="button" class="btn btn-outline-primary">
+                                <i class="fas fa-angle-double-left text-info"></i> Volver
+                            </a>
+                            <button type="submit" class="btn btn-outline-primary">
+                                <i class="fas fa-check text-info"></i> Guardar
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    {% else %}
+        <div class="row d-flex justify-content-center">
+            <div class="col-8">
+                <h1 class="text-center my-5 lead">No tienes permiso para cargar o modificar observaciones</h1>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

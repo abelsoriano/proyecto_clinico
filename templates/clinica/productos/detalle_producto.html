@@ -1,0 +1,85 @@
+{% extends 'layout.html' %} 
+{% load usuarios_tags %}
+{% load static %} 
+
+{% block content %}
+  {% if user|sector:"Venta" or user|sector:"Gerencia" %}
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card bg-transparent border-0 my-3">
+          {% if Producto.imagen %}
+            <img src="{{Producto.imagen.url}}" alt="Imagen" 
+            class="card-img-top img-fluid align-self-center shadow default imagen">
+          {% else %}
+          <img src="{% static 'img/default.svg' %}" alt="Imagen" class="card-img-top img-fluid default">
+          {% endif %}
+          <div class="card-body">
+            {% if Producto.categoria %}
+            <h3 class="text-center bg-verde bg-gradient border mb-0">{{Producto.categoria}}</h3>
+            {% else %}
+              <h3 class="text-center bg-verde bg-gradient border mb-1">Sin categoria...</h3>
+            {% endif %}
+            {% if Producto.lente %}
+              <h3 class="text-center bg-warning bg-gradient border">
+                  Lente {{Producto.get_lado_display}}, para ver {{Producto.get_distancia_display}}
+              </h3>
+            {% endif%}
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="row">
+          <h1 class="text-center border-bottom border-verde border-3">
+            {{Producto.nombre}} <span><i class="fas fa-dollar-sign text-success"></i></span> {{Producto.precio}} 
+          </h1>
+          {% if Producto.armazon %}
+            <h3 class="text-center bg-success border">INCLUYE ARMAZON</h3>
+          {% else %}
+            <h3 class="text-center bg-danger border text-white">NO INCLUYE ARMAZON</h3>
+          {% endif %}
+          {% if Producto.stock > 0 %}
+            <h3 class="text-center text-muted">
+              Hay 
+                {% if Producto.stock < 10 %}
+                  {% if Producto.stock > 5 %}
+                    <span class="border-bottom border-warning border-2">{{Producto.stock}}</span>
+                  {% else %}
+                  <span class="border-bottom border-danger border-2">{{Producto.stock}}</span>
+                  {% endif %}
+                {% else %}
+                <span class="border-bottom border-primary border-2">{{Producto.stock}}</span>
+                {% endif %}
+              unidades
+            </h3>
+          {% else %}
+          {% endif %}
+      </div>
+      <br>
+      </div>
+      <div class="d-flex justify-content-center my-4">
+        <div class="btn-group shadow-sm" role="group" aria-label="Basic outlined example">
+          <a href="{% url 'productos:lista' %}" type="button" class="btn btn-outline-primary">
+            <i class="fas fa-angle-double-left text-info"></i>
+            Volver
+          </a>
+          <a href="{% url 'productos:editar' object.id %}" type="button" class="btn btn-outline-primary">
+            <i class="fas fa-edit text-info"></i>
+            Editar
+          </a>
+          <a href="{% url 'productos:eliminar' object.id %}" type="button" class="btn btn-outline-primary">
+            <i class="fas fa-times text-danger"></i>
+            Quitar
+          </a>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="row d-flex justify-content-center">
+        <div class="col-8">
+            <h1 class="text-center my-5 lead">
+                No tienes permiso para ver los detalles de los productos
+            </h1>
+        </div>
+    </div>
+  {% endif %}
+{% endblock %} 

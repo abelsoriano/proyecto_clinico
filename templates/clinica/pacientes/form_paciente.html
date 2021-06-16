@@ -1,0 +1,150 @@
+{% extends 'layout.html' %}
+{% load usuarios_tags %} 
+{% load widget_tweaks %}
+{% load static %}
+
+{% block content %}
+    {% if user|sector:"Medico" or user|sector:"Secretaria" or user|sector:"Gerencia" %}
+        <form method="post" enctype="multipart/form-data" id="Formulario">
+            {% csrf_token %}
+            <div class="container py-3">
+                <h1 class="display-5 text-center">{{titulo}}</h1>
+                
+                <div class="row">
+                    <!-- Nombre -->
+                    <div class="col-md-6">
+                        <div class="my-3">
+                        <label class="form-label">
+                            {{form.nombre.label|upper}}
+                            <span class="text-danger">*</span>
+                        </label>
+                        {{form.nombre|attr:"autocomplete:off"|add_class:'form-control rounded-pill'}}
+                        </div>
+                    </div>
+                    <!-- Apellido -->
+                    <div class="col-md-6">
+                        <div class="my-3">
+                            <label class="form-label">
+                                {{form.apellido.label|upper}}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{form.apellido|attr:"autocomplete:off"|add_class:'form-control rounded-pill'}}
+                        </div>
+                    </div>
+                </div>
+                 <!-- Edad -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="my-3">
+                            <label class="form-label">
+                                {{form.edad.label|upper}}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{form.edad|attr:"autocomplete:off"|add_class:'form-control rounded-pill'}}
+                        </div>
+                    </div>
+                    <!-- DNI -->
+                    <div class="col-md-4">
+                        <div class="my-3">
+                            <label class="form-label">
+                                {{form.dni.label|upper}}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{form.dni|attr:"autocomplete:off"|add_class:'form-control rounded-pill'}}
+                        </div>
+                    </div>
+                    <!-- Médico -->
+                    <div class="col-md-4">
+                        <div class="my-3">
+                            <label class="form-label">{{form.medico.label|upper}}</label>
+                            {{form.medico|add_class:'form-control rounded-pill'}}
+                        </div>
+                    </div>
+                </div>
+                 <!-- Addres -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="my-3">
+                            <label class="form-label">{{form.addres.label|upper}}</label>
+                            {{form.addres|attr:"autocomplete:off"|add_class:'form-control rounded-pill'}}
+                        </div>
+                    </div>
+                    <!--Telefono-->
+                    <div class="col-md-4">
+                        <div class="my-3">
+                            <label class="form-label">
+                                {{form.telefono.label|upper}}
+                                <!-- <span class="text-danger"></span> -->
+                            </label>
+                            
+                            {{form.telefono}}
+                        </div>
+                    </div>    
+                        <!-- Email -->
+                        <div class="col-md-4">
+                            <div class="my-3">
+                                <label class="form-label">{{form.email.label|upper}}</label>
+                                {{form.email|attr:"autocomplete:off"|attr:"type:email"|add_class:'form-control rounded-pill'}}
+                            </div>
+                        </div>
+                    <!-- Imagen -->
+                    <div class="col-md-6">
+                        <label class="form-label">{{form.imagen.label|upper}}</label>
+                        {% if object.imagen %}
+                            <div class="my-0">
+                                <img src="{{object.imagen.url}}" class="img-fluid" alt="Imagen" height="250" width="250"> 
+                            </div>
+                                {{form.imagen|attr:"type:file"|add_class:'py-2'}}
+                          
+                        {% else %}
+                            <div class="form-file my-5">
+                                {{form.imagen|attr:"type:file"|add_class:'form-file-input'}}
+                                <label class="form-file-label" for="customFile">
+                                <!-- <span class="form-file-text">{{form.imagen.label|upper}}</span> -->
+                                <span class="form-file-button">Buscar</span>
+                                </label>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <!--Record-->
+                    <div class="col-md-6">
+                        <label class="form-label">{{form.record.label|upper}}</label>
+                        {% if object.record %}
+                            <div class="my-0">
+                                
+                                <img src="{{object.record.url}}" class="img-fluid" alt="Imagen" height="250" width="250"> 
+                            </div>
+                                {{form.record|attr:"type:file"|add_class:'py-1'}}
+                            
+                        {% else %}
+                            <div class="form-file my-4">
+                                {{form.record|attr:"type:file"|add_class:'form-file-input'}}
+                                <label class="form-file-label" for="customFile">
+                                <!-- <span class="form-file-text">{{form.record.label|upper}}</span> -->
+                                <!-- <span class="form-file-button">Buscar</span> -->
+                                </label>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <div class="btn-group shadow-sm" role="group" aria-label="Basic outlined example">
+                        <a href="{{volver}}" type="button" class="btn btn-outline-primary">
+                            <i class="fas fa-angle-double-left text-info"></i> Volver
+                        </a>
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="fas fa-check text-info"></i> Guardar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    {% else %}
+        <div class="row d-flex justify-content-center">
+            <div class="col-8">
+                <h1 class="text-center my-5 lead">No tienes permiso para cargar o modificar a los pacientes</h1>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

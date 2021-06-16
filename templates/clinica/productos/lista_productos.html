@@ -1,0 +1,120 @@
+{% extends 'layout.html' %}
+{% load usuarios_tags %} 
+{% load static %} 
+
+{% block content %}
+    {% if user|sector:"Venta" or user|sector:"Gerencia" %}
+        {% include 'componentes/buscar_form.html' %}
+        <div class="row">
+            <div class="col-sm-3">
+                <!-- Turnos del doctor -->
+                <div class="my-3 p-3 bg-info rounded bg-gradient shadow-lg">
+                    <ul class="list-group list-group-flush">
+                        {% if categorias %}
+                            <form class="text-center text-md-left">
+                                <li class="list-group-item bg-transparent border-0">
+                                    <a href="{% url 'productos:lista' %}" 
+                                    type="submit" style="text-decoration: none; color: white;">
+                                            TODOS
+                                    </a>
+                                </li>
+                                {% for categoria in categorias %}
+                                    <li class="list-group-item bg-transparent border-0">
+                                        <a href="{% url 'productos:lista' %}?categoria={{categoria}}" 
+                                        type="submit" style="text-decoration: none; color: white;">
+                                                {{categoria|upper}}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </form>
+                        {% else %}
+                        <a type="buttom" class="btn text-dark" href="{% url 'productos:categorias' %}">
+                            <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent text-white h5">
+                                No hay categorias<i class="fas fa-plus text-success ml-2"></i>
+                            </li>
+                        </a>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-sm-9">
+                <div class="table-responsive bg-white my-3 p-3 rounded shadow-lg">
+                    <div class="row mb-2">
+                        <div class="col-6">
+                            <h6 class="border-bottom pb-2 mb-0">
+                                {{titulo}}
+                                {% if cantidad %}
+                                <span class="badge bg-warning rounded-pill align-text-bottom">{{cantidad}}</span>
+                                {% endif %}
+                            </h6>
+                        </div>
+                        <div class="col-6">
+                            <div class="d-grid gap-2 col-6 mx-auto">
+                                <a type="buttom" class="btn btn-success btn-sm text-dark" href="{% url 'productos:agregar' %}">
+                                    <i class="fas fa-plus"></i>
+                                    Agregar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% if Productos %}
+                        <table class="table display table-bordered  table-striped table-hover table-sm id" class="stripe row-border order-column nowrap">
+                            <thead>
+                                <tr class="text-center table-primary">
+                                    <th>Nombre</th>
+                                    <th>Precio</th>
+                                    <th>Stock</th>
+                                    <th>Prox.Venc.</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for producto in Productos %}
+                                    <tr class="text-center">
+                                        <td>{{producto.nombre}}</td>
+                                        <td>           
+                                            <i class="fas fa-dollar-sign text-success"></i>
+                                            {{producto.precio}}
+                                        </td>
+                                        <td
+                                            {% if producto.stock <= 25 and producto.stock > 10 %}
+                                                class="badge text-dark bg-warning rounded-circle"
+                                            {% else %}
+                                                {% if producto.stock <= 10 %}
+                                                    class="badge text-white bg-danger rounded-circle"
+                                                {% endif %}
+                                            {% endif%}>
+                                            {{producto.stock}}
+                                        </td>
+                                        <td>
+                                            {% if producto.ultimo_vencimiento %}
+                                                {{producto.ultimo_vencimiento}}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-sm d-flex align-self-center" href="{% url 'productos:detalle' producto.id %}">
+                                            <i class="fas fa-search"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %} 
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <h1 class="text-center my-3 lead">No hay productos aún</h1>
+                    {% endif %}
+                </div>
+                {% include 'componentes/paginacion.html' %}
+            </div>
+        </div>
+    {% else %}
+        <div class="row d-flex justify-content-center">
+            <div class="col-8">
+                <h1 class="text-center my-5 lead">No tienes permiso para ver los productos</h1>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

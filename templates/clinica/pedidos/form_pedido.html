@@ -1,0 +1,164 @@
+{% extends 'layout.html' %}
+{% load usuarios_tags %}
+{% load widget_tweaks %}
+
+{% block content %}
+    {% if user|sector:"Taller" or user|sector:"Venta" or user|sector:"Gerencia" %}
+        <div class="row">
+            <form method="post">
+                {% csrf_token %}
+                <div class="container pt-3">
+                    <h1 class="display-5 text-center my-3">
+                        {{titulo}}
+                    </h1>
+
+                    {% include 'componentes/forms_errors.html' %}
+
+                    <!-- Pedido -->
+                    <div class="row">
+                        {% if user|sector:"Taller" %}
+                        <!-- Paciente (quien compra los productos) -->
+                        <div class="col-md-4">
+                            <div class="my-3">
+                                <label class="form-label">
+                                    {{form.paciente.label|upper}}
+                                    {% if user|sector:"Secretaria" or user|sector:"Gerencia" %}
+                                        <a href="{% url 'pacientes:agregar' %}?prev={{request.path}}" type="submit">
+                                            <i class="fas fa-user-plus ml-3 text-success"></i>
+                                        </a>
+                                    {% endif %}
+                                </label>
+                                {{form.paciente|add_class:'form-control rounded'}}
+                            </div>
+                        </div>
+
+                        <!-- Tipo de pago (Tarjeta de credito, debito, billetera virtual, efectivo) -->
+                        <div class="col-md-4">
+                            <div class="my-3">
+                                <label class="form-label">{{form.tipo_de_pago.label|upper}}</label>
+                                {{form.tipo_de_pago|add_class:'form-control rounded'}}
+                            </div>
+                        </div>
+
+                        <!-- Estado (pendiente, taller, finalizado) -->
+                        <div class="col-md-4">
+                            <div class="my-3">
+                                <label class="form-label">{{form.estado.label|upper}}</label>
+                                {{form.estado|add_class:'form-control rounded'}}
+                            </div>
+                        </div>
+                        {% else %}
+                            <!-- Paciente (quien compra los productos) -->
+                            <div class="col-md-3">
+                                <div class="my-3">
+                                    <label class="form-label">
+                                        {{form.paciente.label|upper}}
+                                        {% if user|sector:"Secretaria" or user|sector:"Gerencia" %}
+                                            <a href="{% url 'pacientes:agregar' %}?prev={{request.path}}" type="submit">
+                                                <i class="fas fa-user-plus ml-3 text-success"></i>
+                                            </a>
+                                        {% endif %}
+                                    </label>
+                                    {{form.paciente|add_class:'form-control rounded'}}
+                                </div>
+                            </div>
+
+                            <!-- Tipo de pago (Tarjeta de credito, debito, billetera virtual, efectivo) -->
+                            <div class="col-md-3">
+                                <div class="my-3">
+                                    <label class="form-label">{{form.tipo_de_pago.label|upper}}</label>
+                                    {{form.tipo_de_pago|add_class:'form-control rounded'}}
+                                </div>
+                            </div>
+
+                            <!-- Estado (pendiente, taller, finalizado) -->
+                            <div class="col-md-3">
+                                <div class="my-3">
+                                    <label class="form-label">{{form.estado.label|upper}}</label>
+                                    {{form.estado|add_class:'form-control rounded'}}
+                                </div>
+                            </div>
+
+                            <!-- Sub-total (solo lectura, se genera con los precios de los productos) -->
+                            <div class="col-md-3">
+                                <div class="my-3 text-center">
+                                    <label class="form-label">Monto</label>
+                                    <!-- Cantidad de productos -->
+                                    {% if editar %}
+                                        <i class="fas fa-shopping-cart"></i>
+                                        {% if cantidad > 0 %}
+                                            <span class="badge bg-danger text-white rounded-pill align-text-top">
+                                                {{cantidad}}
+                                            </span>
+                                        {% endif %}
+                                    {% endif %}
+                                    <input type="text" name="subtotal" 
+                                    {% if titulo == 'Agregar pedido' %}
+                                        value="Se actualizará"
+                                    {% else%}
+                                        value="{{object.verSubTotal}}"
+                                    {% endif %}
+                                    readonly
+                                    class="form-control bg-warning bg-gradient rounded text-center">
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!--Vendedor-->
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-sm-5">
+                            <div class="my-2 text-center">
+                                <label class="form-label">{{form.vendedor.label|upper}}</label>
+                                {{form.vendedor|add_class:'form-control rounded'}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detalles del pedido (los productos) -->
+                    <div class="row">
+                        {% if editar %}
+                            <h2 class="display-5 text-center my-3">
+                                Lista de productos
+                                <a href="{% url 'productos:agregar_detalle' object.id %}">
+                                    <i class="fas fa-plus text-success"></i>
+                                </a>
+                            </h2>
+                            <!-- Tabla de productos del pedido -->
+                            {% include 'clinica/pedidos/detallePedido/tabla_detalle_pedido.html' %}
+
+                        {% else %}
+                            <h2 class="display-5 text-center my-3">Lista de productos</h2>
+                            <p class="text-center">Primero debe guardar los datos del pedido</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex justify-content-center">
+                        <div class="btn-group shadow-sm" role="group" aria-label="Basic outlined example">
+                            <a href="{% url 'productos:lista_pedidos' %}" type="button" class="btn btn-outline-primary"><i class="fas fa-angle-double-left text-info"></i> Volver</a>
+                            {% if editar %}
+                            <a href="{% url 'productos:eliminar_pedido' object.id %}" type="button" class="btn btn-outline-primary">
+                                <i class="fas fa-times text-danger"></i>
+                                Cancelar
+                            </a>
+                            {% endif %}
+                            <button type="submit" class="btn btn-outline-primary">
+                                <i class="fas fa-check text-info"></i>
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    {% else %}
+        <div class="row d-flex justify-content-center">
+            <div class="col-8">
+                <h1 class="text-center my-5 lead">
+                    No tienes permiso para ver cargar o modificar pedidos
+                </h1>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'layout.html' %}
+{% load usuarios_tags %} 
+{% load static %} 
+
+{% block content %}
+    {% if user|sector:"Medico" or user|sector:"Gerencia" %}
+        <div class="d-flex justify-content-center my-4">
+            <div class="btn-group shadow-sm" role="group" aria-label="Basic outlined example">
+                <a href="{{volver}}" type="button" class="btn btn-outline-primary">
+                    <i class="fas fa-angle-double-left text-info"></i> Volver
+                </a>
+                <a href="{% url 'pacientes:agregar_observacion' pacienteid %}" type="button" class="btn btn-outline-primary">
+                    <i class="fas fa-plus text-info"></i> Agregar
+                </a>
+            </div>
+        </div>
+
+        <div class="row my-4 d-flex justify-content-center">
+            <div class="col-md-8 mx-2">
+                <div class="my-3 p-3 bg-white rounded shadow-lg">
+                    <h6 class="border-bottom pb-2 mb-0">
+                    {{titulo}}
+                    {% if cantidad %}
+                        <span class="badge bg-success rounded-pill align-text-bottom">{{cantidad}}</span>
+                    {% endif %}
+                    </h6>         
+                    {% if Observaciones %}
+                        {% for observacion in Observaciones %}
+                            <h3 class="text-center my-3">
+                                <span class="text-info">{{observacion.created_at|date:"SHORT_DATE_FORMAT"}}</span>
+                                {{observacion.motivo_consulta}}
+                                <a 
+                                href="{% url 'pacientes:eliminar_observacion' observacion.id %}?lista={{pacienteid}}"
+                                >
+                                    <i class="fas fa-times text-danger mx-2 float-right"></i>
+                                </a>
+                            </h3>
+                            <p>
+                                <a href="{% url 'pacientes:editar_observacion' observacion.id %}?paciente={{pacienteid}}" 
+                                class="mx-2"><i class="fas fa-edit text-success"></i></a>
+                                {% if observacion.descripcion %}
+                                    {{observacion.descripcion}}
+                                {% else %}
+                                    No hay más detalles...
+                                {% endif %}
+                            </p>
+                        {% endfor %} 
+                    {% else %}
+                        <h1>No hay registros aun</h1>
+                    {% endif %}
+                </div>
+            </div>
+            {% if imagen %}
+                <div class="col-md-4">
+                    <img class="img-fluid rounded" src="{{imagen.url}}" alt="Imagen del paciente" height="250" width="250">
+                </div>
+            {% endif %}
+    </div>
+    {% else %}
+        <div class="row d-flex justify-content-center">
+            <div class="col-8">
+                <h1 class="text-center my-5 lead">No tienes permiso para ver las observaciones</h1>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

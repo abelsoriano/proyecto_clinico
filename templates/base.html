@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'libs/bootstrap/css/bootstrap.min.css' %}">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="{% static 'libs/fontawesome/css/all.min.css' %}">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{% static 'favicon/favicon.ico' %}" type="image/x-icon">
+    
+    <!-- Fuente-->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,700;1,400&display=swap" rel="stylesheet"> 
+
+    <!-- Mis estilos -->
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+
+    <!-- Extender css -->
+    {% block css %} 
+    {% endblock %}
+
+    <!-- A todas las vistas hay que pasarle un titulo -->
+    <title>{% if titulo %} {{titulo}} {% else %} Clìnica {% endif %}</title>
+  </head>
+  <body class="bg-light">
+    
+    <!-- Como el layout pero sin footer ni barra de navegacion -->
+    {% block aplicacion %}
+    {% endblock %}
+    
+    <!-- Bootstrap JS -->
+    <script src="{% static 'libs/bootstrap/bootstrap.bundle.min.js' %}"></script>
+    
+    <!-- Fontawesome JS -->
+    <script src="{% static 'libs/fontawesome/js/all.min.js' %}"></script>
+
+    <!-- Extender js -->
+    {% block js %} 
+    {% endblock %}
+  </body>
+</html>

@@ -1,0 +1,89 @@
+{% load static %}
+{% load usuarios_tags %}
+<nav
+  class="navbar navbar-expand-lg fixed-top navbar-light bg-light" aria-label="Main navigation">
+  <div class="container-fluid">
+    
+    <a class="navbar-brand" href="{% url 'compartido:inicio' %}">
+      <img src="{% static 'favicon/favicon-32x32.png' %}" alt="Logo">
+    </a>
+    
+    <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="navbar-collapse offcanvas-collapse open bg-light text-center" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
+        
+        {% if user|sector:"Medico" or user|sector:"Secretaria" or user|sector:"Gerencia" %}
+          <li class="nav-item active my-2">
+            <a class="nav-link" aria-current="page" href="{% url 'pacientes:lista' %}">
+              PACIENTES
+            </a>
+          </li>
+        {% endif %}
+
+        {% if user|sector:"Secretaria" or user|sector:"Gerencia" %}
+          <li class="nav-item my-2">
+            <a class="nav-link" href="{% url 'pacientes:lista_turnos' %}">
+              TURNOS
+            </a>
+          </li>
+        {% endif %}
+        
+        {% if user|sector:"Venta" or user|sector:"Gerencia" %}
+        <li class="nav-item my-2">
+          <a class="nav-link" href="{% url 'productos:lista' %}">
+            PRODUCTOS
+          </a>
+        </li>
+        <li class="nav-item my-2">
+          <a class="nav-link" href="{% url 'productos:categorias' %}">
+            CATEGORIAS
+          </a>
+        </li>
+        {% endif %}
+
+        {% if user|sector:"Venta" or user|sector:"Taller" or user|sector:"Gerencia" %}
+        <li class="nav-item my-2">
+          <a class="nav-link" href="{% url 'productos:lista_pedidos' %}">
+            PEDIDOS
+          </a>
+        </li>
+        {% endif %}
+
+        {% if user|sector:"Gerencia" %}
+        <li class="nav-item my-2">
+          <a class="nav-link" href="{% url 'usuarios:lista' %}">
+            USUARIOS
+          </a>
+        </li>
+        <li class="nav-item my-2">
+          <a class="nav-link" href="{% url 'usuarios:actividades' %}">
+            HISTORIAL
+          </a>
+        </li>
+        <li class="nav-item my-2">
+          <div class="dropdown">
+            <button class="btn btn-transparent dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+              <span class="border-bottom border-verde border-3">Reportes</span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <li><a class="dropdown-item" href="{% url 'reportes:pacientes' %}">Pacientes</a></li>
+              <li><a class="dropdown-item" href="{% url 'reportes:ventas' %}">Ventas</a></li>
+            </ul>
+          </div>
+        </li>
+        {% endif %}
+      </ul>
+
+      <a href="{% url 'usuarios:salir' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-logout my-2" width="32" height="32" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+          <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
+          <path d="M7 12h14l-3 -3m0 6l3 -3" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</nav>

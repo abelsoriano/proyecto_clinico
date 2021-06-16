@@ -1,0 +1,105 @@
+{% extends 'layout.html' %} 
+{% load usuarios_tags %} 
+{% load static %} 
+
+{% block content %}
+    {% if user|sector:"Secretaria" or user|sector:"Gerencia" %}
+        {% include 'componentes/buscar_form.html' %}
+        <div class="row">
+            <div class="col-sm-3">
+                <!-- Turnos del doctor -->
+                <div class="my-3 p-3 bg-warning bg-gradient rounded shadow-lg">
+                    <h3 class="text-center text-white py-3">
+                    <!-- Chincheta -->
+                    <img class="img-fluid" src="{% static 'img/cosito.svg' %}" alt="Cosito que apunta cosas" height="30" width="30">  
+                    Hoy
+                    {% if hoy %}
+                        <span class="d-sm-none d-md-inline badge rounded-pill align-text-bottom" style="background-color: #C5A46F52;">
+                            {{hoy.count}}
+                        </span>
+                    {% endif %}
+                    </h3>
+                    <!-- Pacientes para hoy que aún no fueron atentidos -->
+                    {% if hoy %}
+                        <ul class="list-group list-group-flush">
+                            {% for turno in hoy %}
+                                <li class="list-group-item bg-transparent">{{turno.paciente}}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No hay turnos pendientes para hoy</p>
+                    {% endif %}
+                    <!---->
+                </div>
+            </div>
+
+            <div class="col-sm-9">
+                <div class="table-responsive bg-white my-3 p-3 rounded shadow-lg">
+                    <div class="row mb-2">
+                        <div class="col-6">
+                            <h6 class="border-bottom pb-2 mb-0">
+                                {{titulo}}
+                                {% if Turnos %}
+                                <span class="badge bg-warning rounded-pill align-text-bottom">{{Turnos.count}}</span>
+                                {% endif %}
+                            </h6>
+                        </div>
+                        <div class="col-6">
+                            <div class="d-grid gap-2 col-6 mx-auto">
+                                <a type="buttom" class="btn btn-success btn-sm text-dark" 
+                                href="{% url 'pacientes:agregar_turno' %}">
+                                    <i class="fas fa-plus"></i>
+                                    Agregar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% if Turnos %}
+                        <table class="table display table-bordered  table-striped table-hover table-sm id" class="stripe row-border order-column nowrap">
+                            <thead>
+                                <tr class="table-primary text-center">
+                                    <th>Paciente</th>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Asistencia</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for turno in Turnos %}
+                                    <tr class="text-center">
+                                        <td>{{turno.paciente}}</td>
+                                        <td>           
+                                            {{turno.fecha}}
+                                        </td>
+                                        <td>           
+                                            {{turno.time}}
+                                        </td>
+                                        <td>
+                                            {{turno.get_asistencia_display}}
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-sm d-flex align-self-center" 
+                                            href="{% url 'pacientes:editar_turno' turno.id %}">
+                                            <i class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %} 
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <h1 class="text-center my-3 lead">No hay turnos aún</h1>
+                    {% endif %}
+                </div>
+                {% include 'componentes/paginacion.html' %}
+            </div>
+        </div>
+    {% else %}
+        <div class="row d-flex justify-content-center">
+            <div class="col-8">
+                <h1 class="text-center my-5 lead">No tienes permiso para ver los turnos</h1>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

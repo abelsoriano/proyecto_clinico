@@ -1,0 +1,46 @@
+{% load usuarios_tags %}
+{% if lista_productos %}
+    <div class="table-responsive my-4">
+        <table class="table table-bordeless table-hover table-sm">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad solicitada</th>
+                <th>Precio</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+            {% for item in lista_productos %}               
+                <tr>
+                    <td>{{item.producto.nombre}}</td>
+                    <td>{{item.obtenerCantidad}}</td>
+                    {% if user|sector:"Taller" %}
+                        <td>-</td>
+                    {% else %}
+                        <td>{{item.producto.precio}}</td>
+                    {% endif %}
+                    <td>
+                        <div class="row ml-1">
+                            <div class="col-6 col-md-8 text-md-right">
+                                <a class="btn btn-sm" href="{% url 'productos:editar_detalle' item.id %}?pedido={{object.id}}">
+                                    <i class="fas fa-search"></i>
+                                </a>
+                            </div>
+                            <div class="col-6 col-md-4">       
+                                <a class="btn btn-sm" href="{% url 'productos:eliminar_detalle' item.id %}?pedido={{object.id}}">
+                                    <i class="fas fa-trash text-danger"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% else %}
+    <p class="text-center">Carrito vacío 😞</p>
+{% endif %}
+    

@@ -1,0 +1,103 @@
+{% extends 'layout.html' %}
+{% load usuarios_tags %}
+{% load widget_tweaks %}
+
+{% block content %}
+    {% if user|sector:"Venta" or user|sector:"Gerencia" %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="container pt-3">
+                <h3 class="display-5 text-center my-3">
+                    {{titulo}}
+                    {% if categorias %}
+                        <span class="badge bg-warning rounded-circle align-text-bottom">{{categorias.count}}</span>
+                    {% endif %}
+                </h3>
+                
+                {% include 'componentes/forms_errors.html' %}
+
+                <div class="row d-flex justify-content-center m-3">
+                    <!-- Nombre de la categoria -->
+                    <div class="col-md-6">
+                        <div class="my-3">
+                            <label class="form-label">{{form.nombre.label|upper}}</label>
+                            {{form.nombre|attr:"autocomplete:off"|attr:"autofocus:on"|add_class:'form-control rounded-pill'}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="d-flex justify-content-center my-3">
+                        <div class="btn-group shadow-sm" role="group" aria-label="Basic outlined example">
+                            {% if editar %}
+                                <a href="{% url 'productos:categorias' %}" type="button" class="btn btn-outline-primary">
+                                    <i class="fas fa-angle-double-left text-info"></i> Volver
+                                </a>
+                                <a href="{% url 'productos:eliminar_categoria' object.id %}" type="button" 
+                                class="btn btn-outline-primary">
+                                    <i class="fas fa-times text-danger"></i> Eliminar
+                                </a>
+                            {% else %}
+                                <a href="{% url 'productos:lista' %}" type="button" class="btn btn-outline-primary">
+                                    <i class="fas fa-angle-double-left text-info"></i> Volver
+                                </a>
+                            {% endif %}
+                            <button type="submit" class="btn btn-outline-primary">
+                                <i class="fas fa-check text-ifno"></i> Guardar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row d-flex justify-content-center my-4">
+                    <div class="col-md-6">   
+                        {% if editar %}
+                            {% if productos %}
+                                <ul class="list-group list-group-flush">
+                                    {% for producto in productos %}
+                                        <li class="list-group-item bg-transparent text-center">
+                                            {{producto.nombre}}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-center">No hay productos con esta categoria aún</p>
+                            {% endif %}
+                        {% else %}
+                            {% if categorias %}
+                                <div class="table-responsive">
+                                    <table class="table table-borderless">
+                                        <tbody>
+                                            {% for categoria in categorias %}
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <p class="border-bottom border-verde border-2">{{categoria}}</p>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="{% url 'productos:editar_categoria' categoria.id %}">
+                                                            <i class="fas fa-search text-dark"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div> 
+                            {% else %}
+                                <h1 class="text-center my-3 lead">No hay categorias aún</h1>                         
+                            {% endif %}
+                        {% endif %}    
+                    </div>
+                </div>
+            </div>
+        </form>
+    {% else %}
+        <div class="row d-flex justify-content-center">
+            <div class="col-8">
+                <h1 class="text-center my-5 lead">
+                    No tienes permiso para cargar o modificar las categorias
+                </h1>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

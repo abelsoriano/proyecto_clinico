@@ -1,0 +1,64 @@
+{% extends 'layout.html' %} 
+{% load usuarios_tags %}
+{% load static %} 
+
+{% block content %}
+  {% if user|sector:"Gerencia" %}
+    {% include 'componentes/buscar_form.html' %}
+    <div class="row d-flex justify-content-center">
+
+      <div class="col-sm-8">
+        <div class="my-3 p-3 bg-white rounded shadow-lg">
+          
+          <div class="row text-center">
+              <h6 class="border-bottom pb-2 mb-0">
+                {{titulo}}
+              </h6>
+          </div>
+          
+          {% if Actividades %}
+            <div class="table-responsive my-3">
+              <table  class="table display table-bordered  table-striped table-hover table-sm id" class="stripe row-border order-column nowrap">
+                <thead class="text-primary">
+                  <tr class="table-primary">
+                    <th>
+                        <span class="border-bottom border-verde border-3">
+                            Empleado
+                        </span>
+                    </th>
+                    <th>Acción</th>
+                    <th class="text-center">Momento</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for actividad in Actividades %}
+                    <tr>
+                        <td>
+                            {{actividad.usuario}}
+                        </td>
+                        <td>
+                            {{actividad.accion}}
+                        </td>
+                        <td class="text-center">
+                            {{actividad.momento|date:"D d M P"}}
+                        </td>
+                    </tr>
+                    {% endfor %} 
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+              <h1 class="text-center my-3 lead">No hay actividades aún</h1>
+          {% endif %}
+        </div>
+        {% include 'componentes/paginacion.html' %}
+      </div>
+    </div>
+  {% else %}
+    <div class="row d-flex justify-content-center">
+      <div class="col-8">
+        <h1 class="text-center my-5 lead">No tienes permiso para ver la lista de usuarios</h1>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

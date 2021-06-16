@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+{% load usuarios_tags %}
+{% load widget_tweaks %}
+
+{% block content %}
+    {% if user|sector:"Taller" or user|sector:"Venta" or user|sector:"Gerencia" %}
+        <div class="row">
+            <form method="post">
+                {% csrf_token %}
+                <div class="container pt-3">
+                    <h1 class="display-5 text-center my-3">{{titulo}}</h1>
+
+                    {% include 'componentes/forms_errors.html' %}
+
+                    <!-- Detalle -->
+                    <div class="row d-flex justify-content-center">
+                        <!-- Productos -->
+                        <div class="col-md-4">
+                            <div class="my-5">
+                                <label class="form-label">
+                                    {{form.producto.label|upper}}
+                                    {% if not editar %}
+                                    <a href="{% url 'productos:agregar' %}?prev={{request.path}}" type="submit">
+                                        <i class="fas fa-user-plus ml-3 text-success"></i>
+                                    </a>
+                                    {% endif %}
+                                </label>
+                                {% if editar %}
+                                    {{form.producto|attr:"value:object.producto"|attr:"readonly:on"|add_class:'form-control text-center rounded'}}
+                                {% else %}
+                                    {{form.producto|add_class:'form-control text-center rounded'}}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Cantidad -->
+                        <div class="col-md-3">
+                            <div class="my-5">
+                                <label class="form-label">{{form.cantidad.label|upper}}</label>
+                                {{form.cantidad|add_class:'form-control rounded'}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- {{form.pedido|attr:"value:object.pedido"|add_class:"d-none"}} -->
+
+                    <div class="d-flex justify-content-center">
+                        <div class="btn-group shadow-sm" role="group" aria-label="Basic outlined example">
+                            <a href="{{url_volver}}" type="button" class="btn btn-outline-primary">
+                                <i class="fas fa-angle-double-left text-info"></i> Volver
+                            </a>
+                            <button type="submit" class="btn btn-outline-primary">
+                                <i class="fas fa-check text-infor"></i> Guardar
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    {% else %}
+    <div class="row d-flex justify-content-center">
+        <div class="col-8">
+            <h1 class="text-center my-5 lead">
+                No tienes permiso para ver cargar o modificar pedidos
+            </h1>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,10 @@
+{% if user.is_authenticated %}
+  <div class="nav-scroller bg-white shadow-sm">
+    <nav class="nav nav-underline d-flex justify-content-center" aria-label="Secondary navigation">
+      <a class="nav-link active" aria-current="page" href="#" id="subnav">
+        <i class="fas fa-circle text-verde mr-2"></i>
+        {{user.username|upper}} | {{date}}
+      </a>
+    </nav>
+  </div>
+{% endif %}

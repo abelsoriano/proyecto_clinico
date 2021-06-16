@@ -1,0 +1,91 @@
+{% extends 'layout.html' %} 
+{% load usuarios_tags %}
+{% load static %} 
+
+{% block content %}
+	{% if user|sector:"Taller" or user|sector:"Venta" or user|sector:"Gerencia" %}
+		{% include 'componentes/buscar_form.html' %}
+		<div class="row d-flex justify-content-center">
+			<div class="col-sm-10">
+			<div class="my-3 p-3 bg-white rounded shadow-lg">
+				{% if user|sector:"Venta" or user|sector:"Gerencia" %}
+					<div class="row">
+						<div class="col-6">
+							<h6 class="border-bottom pb-2 mb-0">
+								{{titulo}}
+								{% if cantidad %}
+								<span class="badge bg-warning rounded-pill align-text-bottom">{{cantidad}}</span>
+								{% endif %}
+							</h6>
+						</div>
+						<div class="col-6">
+							<div class="d-grid gap-2 col-6 mx-auto">
+								<a type="buttom" class="btn btn-success text-dark btn-sm" href="{% url 'productos:agregar_pedido' %}">
+									<i class="fas fa-plus text-dark"></i>
+									Agregar
+								</a>
+							</div>
+						</div>
+					</div>
+				{% else %}
+					<div class="row">
+						<div class="col">
+							<h6 class="border-bottom pb-2 mb-0">
+								{{titulo}}
+								{% if cantidad %}
+								<span class="badge bg-warning rounded-pill align-text-bottom">{{cantidad}}</span>
+								{% endif %}
+							</h6>
+						</div>
+					</div>
+				{% endif %}
+
+				{% if Pedidos %}
+					<div class="table-responsive">
+						<table class="table display table-bordered  table-striped table-hover table-sm id" class="stripe row-border order-column nowrap">
+							<tbody>
+								<tr class="table-primary">
+									<th>Paciente</th>
+									<th>Estado</th>
+									<th>Monto</th>
+									<th></th>
+								</tr>
+							</tbody>
+							<tbody>
+								{% for pedido in Pedidos %}
+									<tr>
+										<td>{{pedido.paciente}}</td>
+										<td>{{pedido.get_estado_display}}</td>
+										<td>
+											{% if user|sector:"Taller" %}
+												-
+											{% else %}
+												<i class="fas fa-dollar-sign text-success"></i>
+												{{pedido.subtotal}}
+											{% endif%}
+										</td>
+										<td>
+											<a href="{% url 'productos:editar_pedido' pedido.id %}">
+												<i class="fas fa-search text-dark"></i>
+											</a>
+										</td>
+									</tr>
+								{% endfor %} 
+							</tbody>
+						</table>
+					</div>
+				{% else %}
+					<h1 class="text-center my-3 lead">No hay pedidos aún</h1>
+				{% endif %}
+			</div>
+			{% include 'componentes/paginacion.html' %}
+			</div>
+		</div>
+	{% else %}
+		<div class="row d-flex justify-content-center">
+			<div class="col-8">
+				<h1 class="text-center my-5 lead">No tienes permiso para ver los pedidos</h1>
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}

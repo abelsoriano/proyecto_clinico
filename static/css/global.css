@@ -1,0 +1,37 @@
+body{
+  font-family: 'Mulish', sans-serif;
+}
+
+.footer-basic {
+  padding: 40px 0;
+  color: #4b4c4d;
+}
+
+.footer-basic .copyright {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 13px;
+  color: #aaa;
+  margin-bottom: 0;
+}
+
+.card-img {
+  border-bottom-right-radius: 0%!important;
+  border-bottom-left-radius: 0%!important;
+}
+
+#subnav:hover {
+  color: gray
+}
+
+.default{
+  width: 60%;
+  height: 60%;
+  align-self:center;
+}
+.imagen {
+  transition: 0.5s;
+}
+.imagen:hover{
+  transform: scale(1.3);
+}

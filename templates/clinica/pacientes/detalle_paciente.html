@@ -1,0 +1,96 @@
+{% extends 'layout.html' %} 
+{% load usuarios_tags %} 
+{% load static %} 
+
+{% block content %}
+  {% if user|sector:"Medico" or user|sector:"Secretaria" or user|sector:"Gerencia" %}
+    <div class="row">
+      <div class="card shadow">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 d-flex justify-content-center my-2">
+              {% if Paciente.imagen %}
+                <img class="img-fluid rounded imagen" src="{{Paciente.imagen.url}}" alt="Imagen del paciente" height="250" width="250">
+              {% else %}
+                <img class="img-fluid" src="{% static 'img/default.svg' %}" alt="Imagen del paciente" height="250" width="250">
+              {% endif %}
+            </div>
+            <div class="col-md-4 text-center">
+              <h2 class="my-2">
+                {{Paciente.nombre}} {{Paciente.apellido}}
+              </h2>
+              <hr />
+
+              {% if Paciente.medico %}
+                <p class="bg-success text-center">Paciente de {{request.user.get_full_name}}</p>
+              {% endif %}
+              <p>Dirección: {{Paciente.addres}}</p>
+              {% if Paciente.email %}
+                <p>{{Paciente.email}}</p>
+              {% else %}
+                <p>No dio email</p>
+              {% endif %}
+              
+              <p>Documento: {{Paciente.dni}}</p>
+                 Telefono:  {{Paciente.telefono}}
+              <p>Edad: {{Paciente.edad}}</p>
+            </div>
+            <div class="col-md-4 bg-warning bg-gradient shadow-sm">
+              <!-- Chincheta -->
+              <h3 class="text-center text-white py-3">
+                <img class="img-fluid" src="{% static 'img/cosito.svg' %}" alt="Cosito que apunta cosas" height="50" width="50">
+                Observaciones 
+                {% if cantidad %}
+                <span class="badge bg-danger text-white rounded-pill align-text-top">
+                  {{cantidad}}
+                </span>
+                {% endif %}
+              </h3>
+              {% if user|sector:"Medico" or user|sector:"Gerencia" %}
+                {% if Historial %} 
+
+                  {% for observacion in Historial %}
+                    <p>
+                      <span class="font-weight-bolder">{{observacion.motivo_consulta}}</span>. 
+                      {{observacion.descripcion|truncatechars:25}}
+                    </p>
+                    <hr />
+                  {% endfor %} 
+
+                {% else %}
+                  <p class="text-center">No hay observaciones aún</p>
+                {% endif %}
+              {% else %}
+                    <p class="text-center">Solo su médico puede ver las observaciones</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-center my-4">
+        <div class="btn-group shadow-sm" role="group" aria-label="Basic outlined example">
+          <a href="{% url 'pacientes:lista' %}" type="button" class="btn btn-outline-primary">
+            <i class="fas fa-angle-double-left text-info"></i> Volver
+          </a>
+          
+          <a href="{% url 'pacientes:editar' Paciente.id %}" type="button" class="btn btn-outline-primary">
+            <i class="fas fa-user-edit text-info"></i> Editar
+          </a>
+          {% if user|sector:"Medico" or user|sector:"Gerencia" %}
+            <a href="{% url 'pacientes:lista_observaciones' Paciente.id %}" type="button" class="btn btn-outline-primary">
+              <i class="fas fa-book-medical text-info"></i> Historial
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% else %}
+      <div class="row d-flex justify-content-center">
+        <div class="col-8">
+          <h1 class="text-center my-5 lead">No tienes permiso para ver los detalles de los pacientes</h1>
+        </div>
+      </div>
+  {% endif %}
+{% endblock %} 
+

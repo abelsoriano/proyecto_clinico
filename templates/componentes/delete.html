@@ -1,0 +1,24 @@
+{% extends 'layout.html' %} 
+{% block content %}
+  <div class="row my-3">
+    <h1 class="text-center my-3">
+      ¿Estás seguro de <span class="border-bottom border-danger border-3">{{titulo|lower}}</span>?
+    </h1>
+    <div class="d-flex justify-content-center align-items-center">
+      <form method="post">
+        {% csrf_token %}
+        <div class="btn-group shadow-sm my-3" role="group" aria-label="Basic outlined example">
+          
+          <a href={{url_volver}} type="button" class="btn btn-outline-primary">
+            <i class="fas fa-angle-double-left text-info"></i> Volver
+          </a>
+
+          <button type="submit" class="btn btn-outline-primary">
+            <i class="fas fa-check text-info"></i> Confirmar
+          </button>
+
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

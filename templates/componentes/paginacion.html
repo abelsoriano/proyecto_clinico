@@ -1,0 +1,20 @@
+{% if is_paginated %}
+    <nav aria-label="Page navigation conatiner">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li>
+                    <a class="btn btn-sm" href="?page={{ page_obj.previous_page_number }}" class="page-link">
+                    <i class="fas fa-angle-double-left text-primary"></i>
+                    </a>
+                </li>
+            {% endif %}
+            {% if page_obj.has_next %}
+                <li>
+                    <a class="btn btn-sm" href="?page={{ page_obj.next_page_number }}" class="page-link">
+                    <i class="fas fa-angle-double-right text-primary"></i>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}

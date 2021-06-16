@@ -1,0 +1,94 @@
+{% extends 'layout.html' %} 
+{% load usuarios_tags %}
+{% load static %} 
+
+{% block content %}
+  {% if user|sector:"Medico" or user|sector:"Secretaria" or user|sector:"Gerencia" %}
+    
+    <!-- Formulario busqueda -->
+    <form class="d-flex">
+      <input class="form-control mr-2" autocomplete="off" type="nombre" placeholder="{{buscar}}" name="query">
+      <input class="form-control mr-2" type="date" name="fecha">
+      <button class="btn btn-outline-success text-dark" type="submit">Buscar</button>
+    </form>
+    
+    
+    <div class="row d-flex justify-content-center">
+      <div class="col-sm-10">
+        <div class="my-3 p-3 bg-white rounded shadow-lg">
+          <div class="row">
+            <div class="col-6">
+              <h6 class="border-bottom pb-2 mb-0">
+                {{titulo}}
+                {% if cantidad %}
+                <span class="badge bg-warning rounded-pill align-text-bottom">{{cantidad}}</span>
+                {% endif %}
+              </h6>
+            </div>
+            <div class="col-6">
+                <div class="d-grid gap-2 col-6 mx-auto">
+                  <a type="buttom" class="btn btn-success text-dark btn-sm" href="{% url 'pacientes:agregar' %}">
+                      <i class="fas fa-plus text-dark"></i>
+                      Agregar
+                  </a>
+              </div>
+            </div>
+          </div>
+          
+          {% if Pacientes %}
+            <div class="table-responsive my-3">
+              <table class="table display table-bordered  table-striped table-hover table-sm id"  class="stripe row-border order-column nowrap">
+                <thead>
+                  <tr class="table-primary">
+                    <th>Foto</th>
+                    <th>Paciente</th>
+                    <th>Telefono</th>
+                    <th>Cedula</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for paciente in Pacientes %}
+                    <tr>
+                      <td>
+                        {% if paciente.imagen %}
+                          <img src="{{paciente.imagen.url}}" width="25" height="25" class="img-fluid rounded" alt="foto">
+                        {% else%}
+                          <img src="{% static 'img/default.svg' %}" width="45" height="45" class="img-fluid" alt="foto">
+                        {% endif %}
+                      </td>
+                      <td>{{paciente.nombre}} {{paciente.apellido}}</td>
+                      <td>{{paciente.telefono}}</td>
+                      <td>{{paciente.dni}}</td>
+
+                      <td>
+                        <a href="{% url 'pacientes:detalle' paciente.id %}">
+                          <i class="fas fa-search text-dark"></i>
+                        </a>
+                      </td>
+                      <td>
+                        <a href="{% url 'pacientes:eliminar' paciente.id %}">
+                          <i class="fas fa-times text-danger"></i>
+                        </a>
+                      </td>
+                    </tr>
+                    {% endfor %} 
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+              <h1 class="text-center my-3 lead">No hay pacientes aún</h1>
+          {% endif %}
+        </div>
+        {% include 'componentes/paginacion.html' %}
+      </div>
+    </div>
+  {% else %}
+    <div class="row d-flex justify-content-center">
+      <div class="col-8">
+        <h1 class="text-center my-5 lead">No tienes permiso para ver a los pacientes</h1>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
